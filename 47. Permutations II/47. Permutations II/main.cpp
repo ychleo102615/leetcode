@@ -1,27 +1,51 @@
 //
 //  main.cpp
-//  31. Next Permutation
+//  47. Permutations II
 //
-//  Created by 黃耀昌 on 2019/2/12.
+//  Created by 黃耀昌 on 2019/3/5.
 //  Copyright © 2019年 黃耀昌. All rights reserved.
 //
 
 #include <iostream>
 #include <vector>
+#include <map>
 
 using namespace std;
 
-/*
- 
- 我猜這題會是之後很容易再次考到的題目，像是現在我重新回顧第31題的原因就是在第46題又遇到了。
- 雖然當初在寫31題的時候已經苦思一整天並且搞懂了，但是現在又得回來複習，幸好還看得懂。
- 現在為了以後任何時候回來看東能夠看懂，我想下大量地註解，雖然這就軟體設計可能不是件好事，這代表
- 程式會很難維護，不過我想第31題的內容我己經寫得很完美了，應該不會再改動。
- 
- */
-
 class Solution {
 public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        
+        int repeats = factorial(nums.size());
+        
+        map<int,int> myMap;
+        for(int i=0;i<nums.size();i++){
+            
+            if(myMap.find(nums[i]) == myMap.end()){
+                myMap.insert(make_pair(nums[i], 1));
+            }
+            else{
+                myMap[nums[i]]++;
+                repeats /= myMap[nums[i]];
+            }
+        }
+        
+        vector<vector<int>> ans;
+        
+        for(int i=0;i<repeats;i++){
+            ans.push_back(nums);
+            nextPermutation(nums);
+        }
+        
+        return ans;
+    }
+    
+    int factorial(int n)
+    {
+        // single line to find factorial
+        return (n==1 || n==0) ? 1: n * factorial(n - 1);
+    }
+    
     void nextPermutation(vector<int>& nums) {
         
         int i;
@@ -51,25 +75,19 @@ public:
     }
 };
 
-int factorial(int n)
-{
-    // single line to find factorial
-    return (n==1 || n==0) ? 1: n * factorial(n - 1);
-}
 int main(int argc, const char * argv[]) {
     // insert code here...
     std::cout << "Hello, World!\n";
-    vector<int> nums{1,1,2,2,3,3,3};
     Solution s;
-    int f=factorial(nums.size());
-    for(int k=0;k<f;k++){
-        cout << k << "th: ";
-        for(int i=0;i<nums.size();i++){
-            cout << nums[i] << " ";
+    vector<int> nums{1,1,1,3,3,3};
+    vector<vector<int>>ans = s.permuteUnique(nums);
+    
+    for(int i=0;i<ans.size();i++){
+        cout << i << "th: ";
+        for(int j=0;j<ans[i].size();j++){
+            cout << ans[i][j] << " ";
         }
         cout << endl;
-        s.nextPermutation(nums);
     }
-    
     return 0;
 }
