@@ -60,8 +60,11 @@ public:
                 return false;
             }
             else{
-                double slope = (double)(y-i)/(x-ansProto[i]);
-                if(slope == 1 || slope == -1){
+//                double slope = (double)(y-i)/(x-ansProto[i]);
+//                if(slope == 1 || slope == -1){
+//                    return false;
+//                }
+                if(y-i == abs(x-ansProto[i])){
                     return false;
                 }
             }
