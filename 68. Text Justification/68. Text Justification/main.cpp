@@ -47,20 +47,50 @@ public:
                 }
             }
             
-            ans.push_back(setLine(words, wordsCount, takeIn));
+            ans.push_back(setLine(words, wordsCount, takeIn, maxWidth));
             wordsCount += takeIn;
         }
         
         return ans;
     }
     
-    string setLine(vector<string>& words, int wordsCount, int takeIn){
+    string setLine(vector<string>& words, int wordsCount, int takeIn, int& maxWidth){
         string line;
         
-        // TODO: adjust to leetcode's needs
-        for(int i = 0; i < takeIn; i++){
-            line += words[wordsCount+i] + ' ';
+        bool isLastLine = false;
+        if(wordsCount + takeIn == words.size()){
+            isLastLine = true;
         }
+        
+        if(takeIn == 1 || isLastLine){
+            
+            // Won't do special space distribution here
+            line += words[wordsCount];
+            for(int i = 1; i < takeIn; i++){
+                line += ' ' + words[wordsCount+i];
+            }
+            line += string(maxWidth - line.length(), ' ');
+        }
+        else{
+            int leftSpaceLen = maxWidth;
+            for(int i = 0; i < takeIn; i++){
+                leftSpaceLen -= words[wordsCount+i].length();
+            }
+            int intervalNum = takeIn - 1;
+
+            int eachSpaceLen = leftSpaceLen / intervalNum;
+            leftSpaceLen %= intervalNum;
+            
+            line += words[wordsCount];
+            for(int i = 1; i < takeIn; i++){
+                if(leftSpaceLen > 0){
+                    line += ' ';
+                    leftSpaceLen--;
+                }
+                line += string(eachSpaceLen, ' ') + words[wordsCount+i];
+            }
+        }
+        
         return line;
     }
 };
@@ -73,7 +103,11 @@ int main(int argc, const char * argv[]) {
     vector<string> words3{"Science","is","what","we","understand","well","enough","to","explain",
         "to","a","computer.","Art","is","everything","else","we","do"};
     vector<string> words4{"appleapple", "appleapple", "apple", "pinee", "appleapple"};
+    vector<string> words5{"Science","is","what","we","understand","well","enough","to","explain","to","a","computer.","Art","is","everything","else","we","do"};
     Solution s;
-    s.fullJustify(words4, 10);
+    vector<string> ans = s.fullJustify(words5, 20);
+    for(int i=0;i<ans.size();i++){
+        cout << "--" << ans[i] << "--" << endl;
+    }
     return 0;
 }
