@@ -25,9 +25,23 @@ public:
             if(cutOff.length() <= 0){
                 continue;
             }
-            cout << cutOff << endl;
+            else if(cutOff == "."){
+                continue;
+            }
+            else if(cutOff == ".."){
+                if(address.size() > 0)
+                    address.pop_back();
+                continue;
+            }
             address.push_back(cutOff);
         }
+        
+        for(int i=0;i<address.size();i++){
+            ans +=  "/" + address[i];
+        }
+        if(address.size() == 0)
+            ans = "/";
+        
         return ans;
     }
 };
@@ -35,8 +49,8 @@ public:
 int main(int argc, const char * argv[]) {
     // insert code here...
     
-    string path = "/home//foo//./";
+    string path = "/a/../../b/../c//.//";
     Solution s;
-    s.simplifyPath(path);
+    cout << "Answer is: " << s.simplifyPath(path) << endl;
     return 0;
 }
