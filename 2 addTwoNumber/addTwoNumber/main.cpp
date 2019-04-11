@@ -20,10 +20,12 @@ public:
         int carryTemp=0;
         ListNode* ptr = NULL;
         ListNode* lastNode = NULL;
+        ListNode* temp;
+        int digit;
         
-        while(l1 != NULL || l2 != NULL){
+        while(l1 != NULL || l2 != NULL || carryTemp != 0){
             
-            int digit = carryTemp;
+            digit = carryTemp;
             if(l1!=NULL){
                 digit+=l1->val;
                 l1 = l1->next;
@@ -33,7 +35,7 @@ public:
                 l2 = l2->next;
             }
             
-            ListNode* temp = new ListNode(digit%10);
+            temp = new ListNode(digit%10);
             
             if(ptr == NULL)
                 ptr = temp;
@@ -42,10 +44,6 @@ public:
             
             lastNode = temp;
             carryTemp = digit/10;
-        }
-        
-        if(carryTemp != 0){
-            lastNode->next = new ListNode(carryTemp);
         }
         
         return ptr;
