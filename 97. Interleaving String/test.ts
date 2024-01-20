@@ -17,7 +17,10 @@ function test() {
 "aabcc"
 "dbbca"
 "aadbcbbcac"
-"aaaaay"
-"aaaaax"
-"aaaaaxaaaaay"
+"bbbbbabbbbabaababaaaabbababbaaabbabbaaabaaaaababbbababbbbbabbbbababbabaabababbbaabababababbbaaababaa"
+"babaaaabbababbbabbbbaabaabbaabbbbaabaaabaababaaaabaaabbaaabaaaabaabaabbbbbbbbbbbabaaabbababbabbabaab"
+"babbbabbbaaabbababbbbababaabbabaabaaabbbbabbbaaabbbaaaaabbbbaabbaaabababbaaaaaabababbababaababbababbbababbbbaaaabaabbabbaaaaabbabbaaaabbbaabaaabaababaababbaaabbbbbabbbbaabbabaabbbbabaaabbababbabbabbab"
+"aacaac"
+"aacaaeaac"
+"aacaacaaeaacaac"
 }

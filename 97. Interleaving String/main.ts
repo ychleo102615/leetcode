@@ -3,7 +3,6 @@ function isInterleave(s1: string, s2: string, s3: string): boolean {
     if (s1.length + s2.length != s3.length) {
         return false;
     }
-    console.log("pass count check");
 
     let dstMap = new Map<string, number>();
     let srcMap = new Map<string, number>();
@@ -11,14 +10,11 @@ function isInterleave(s1: string, s2: string, s3: string): boolean {
     addMap(s1, srcMap);
     addMap(s2, srcMap);
 
-    console.log(dstMap)
-    console.log(srcMap)
     for (let [key, value] of dstMap) {
         if (srcMap.get(key) != value) {
             return false;
         }
     }
-    console.log("pass map check");
 
     if (
         (s1[0] != s3[0] && s2[0] != s3[0]) ||
@@ -26,13 +22,12 @@ function isInterleave(s1: string, s2: string, s3: string): boolean {
     ) {
         return false;
     }
-    console.log("pass head tail check")
 
     let i1 = 0;
     let i2 = 0;
     let i3 = 0;
 
-    let strcmp2 = (a: string, b: string) => {
+    let strcmp = (a: string, b: string) => {
         let index = 0;
         while (a[index] == b[index] && index < a.length) {
             index++;
@@ -40,7 +35,6 @@ function isInterleave(s1: string, s2: string, s3: string): boolean {
         return index;
     }
     let recursive = () => {
-        console.log("Into Recursive:");
         if (i1 == s1.length) {
             return s2.substring(i2) === s3.substring(i3);
         }
@@ -50,70 +44,56 @@ function isInterleave(s1: string, s2: string, s3: string): boolean {
         let ss1 = s1.substring(i1);
         let ss2 = s2.substring(i2);
         let ss3 = s3.substring(i3);
-        let consistentCount = strcmp2(ss1, ss2);
-        console.log("substrings:", ss1, ss2, ss3, consistentCount);
+        // let consistentCount = strcmp(ss1, ss2);
 
-        let firstDiff = strcmp2(ss1, ss3);
-        if (firstDiff > 0) {
-            i1 += firstDiff;
-            i3 += firstDiff;
-            if (recursive()) {
-                return true;
-            }
-            i1 -= firstDiff;
-            i3 -= firstDiff;
-            // for (let i = 0; i < firstDiff; i++) {
-            //     i1++;
-            //     i3++;
-            //     if (recursive()) {
-            //         return true;
-            //     }
-            // }
-            // i1 -= firstDiff;
-            // i3 -= firstDiff;
+        let firstDiff = strcmp(ss1, ss3);
+        let secondDiff = strcmp(ss2, ss3);
+
+        let takeS1 = (a = 1)=> {
+            console.log("s1: ", ss1.substring(0, a));
+            i1 += a;
+            i3 += a;
+            let result = recursive();
+            i1 -= a;
+            i3 -= a;
+            return result;
+        }
+        let takeS2 = (a = 1) => {
+            console.log("s2: ", ss2.substring(0, a));
+            i2 += a;
+            i3 += a;
+            let result = recursive();
+            i2 -= a;
+            i3 -= a;
+            return result;
         }
 
-        if (firstDiff > 0 && consistentCount > 0 && firstDiff < ss2.length) {
-            console.log("Exchange for", firstDiff)
-            i2 += firstDiff;
-            i3 += firstDiff;
-            if (recursive()) {
+        if (firstDiff == 0 && secondDiff == 0) {
+            // console.log("Dead")
+            return false;
+        } else if (firstDiff == 0) {
+            if (takeS2()){
                 return true;
             }
-            i2 -= firstDiff;
-            i3 -= firstDiff;
-            // for (let i = 0; i < firstDiff; i++) {
-            //     i2++;
-            //     i3++;
-            //     if (recursive()) {
-            //         return true;
-            //     }
-            // }
-            // i2 -= firstDiff;
-            // i3 -= firstDiff;
+        } else if (secondDiff == 0) {
+            if (takeS1()){
+                return true;
+            }
         } else {
-            let secondDiff = strcmp2(ss2, ss3);
-            if (secondDiff > 0) {
-                // i2 += secondDiff;
-                // i3 += secondDiff;
-                // if (recursive()) {
-                //     return true;
-                // }
-                // i2 -= secondDiff;
-                // i3 -= secondDiff;
-                for (let i = 0; i < secondDiff; i++) {
-                    i2++;
-                    i3++;
-                    if (recursive()) {
-                        return true;
-                    }
-                }
-                i2 -= secondDiff;
-                i3 -= secondDiff;
-
+            if (firstDiff > secondDiff) {
+                if (takeS1())
+                    return true;
+                if (takeS2())
+                    return true;
+            } else {
+                if (takeS2())
+                    return true;
+                if (takeS1())
+                    return true;
             }
         }
 
+        console.log("Revert")
         return false;
     }
 
@@ -132,4 +112,3 @@ function addMap(theString: string, theMap: Map<string, number>) {
         }
     }
 }
-
