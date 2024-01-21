@@ -1,5 +1,5 @@
 function isInterleave(s1: string, s2: string, s3: string): boolean {
-    console.log("\n----------- interleave -----------")
+    // console.log("\n----------- interleave -----------")
     if (s1.length + s2.length != s3.length) {
         return false;
     }
@@ -27,78 +27,51 @@ function isInterleave(s1: string, s2: string, s3: string): boolean {
     let i2 = 0;
     let i3 = 0;
 
-    let strcmp = (a: string, b: string) => {
-        let index = 0;
-        while (a[index] == b[index] && index < a.length) {
-            index++;
-        }
-        return index;
-    }
+    // let visited: boolean[][] = new Array(s1.length+1).fill(new Array(s2.length+1).fill(false));
+    let visited: boolean[][] = Array.from(Array(s1.length+1), ()=> new Array(s2.length+1).fill(false));
+
     let recursive = () => {
+        // console.log(visited)
         if (i1 == s1.length) {
             return s2.substring(i2) === s3.substring(i3);
         }
         if (i2 == s2.length) {
             return s1.substring(i1) === s3.substring(i3);
         }
-        let ss1 = s1.substring(i1);
-        let ss2 = s2.substring(i2);
-        let ss3 = s3.substring(i3);
-        // let consistentCount = strcmp(ss1, ss2);
-
-        let firstDiff = strcmp(ss1, ss3);
-        let secondDiff = strcmp(ss2, ss3);
-
-        let takeS1 = (a = 1)=> {
-            console.log("s1: ", ss1.substring(0, a));
-            i1 += a;
-            i3 += a;
-            let result = recursive();
-            i1 -= a;
-            i3 -= a;
-            return result;
-        }
-        let takeS2 = (a = 1) => {
-            console.log("s2: ", ss2.substring(0, a));
-            i2 += a;
-            i3 += a;
-            let result = recursive();
-            i2 -= a;
-            i3 -= a;
-            return result;
-        }
-
-        if (firstDiff == 0 && secondDiff == 0) {
-            // console.log("Dead")
+        // console.log("visit", i1, i2)
+        if (visited[i1][i2]) {
+            // console.log("is visited, return")
             return false;
-        } else if (firstDiff == 0) {
-            if (takeS2()){
+        }
+        visited[i1][i2] = true;
+
+        if (s1[i1] == s3[i3]) {
+            // console.log("s1:", s1[i1]);
+            i1++;
+            i3++;
+            if (recursive()) {
                 return true;
             }
-        } else if (secondDiff == 0) {
-            if (takeS1()){
+            i1--;
+            i3--;
+        }
+        if (s2[i2] == s3[i3]) {
+            // console.log("s2:", s2[i2]);
+            i2++;
+            i3++;
+            if (recursive()) {
                 return true;
             }
-        } else {
-            if (firstDiff > secondDiff) {
-                if (takeS1())
-                    return true;
-                if (takeS2())
-                    return true;
-            } else {
-                if (takeS2())
-                    return true;
-                if (takeS1())
-                    return true;
-            }
+            i2--;
+            i3--;
         }
 
-        console.log("Revert")
+        // console.log("Revert")
         return false;
     }
 
     let result = recursive();
-    console.log("Result:", result);
+    // console.log("Result:", result);
     return result;
 };
 
