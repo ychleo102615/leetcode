@@ -25,43 +25,31 @@
 function isValidBST(root: TreeNode | null): boolean {
     if (!root) return true;
 
+    let current: TreeNode;
     if (root.left) {
         if (isValidBST(root.left) === false) {
-            // console.log( root.val.toString() + "is wrong");
             return false;
         }
-        if (getBiggestValue(root.left) >= root.val) {
-            // console.log( root.val.toString() + "is wrong");
+        current = root.left;
+        while(current.right) {
+            current = current.right;
+        }
+        if (current.val >= root.val) {
             return false;
         }
     }
     if (root.right !== null) {
         if (isValidBST(root.right) === false) {
-            // console.log( root.val.toString() + "is wrong");
             return false;
         }
-        if (getSmallestValue(root.right) <= root.val) {
-            // console.log( root.val.toString() + "is wrong");
+        current = root.right;
+        while(current.left) {
+            current = current.left;
+        }
+        if (current.val <= root.val) {
             return false;
         }
     }
 
-    return true;;
+    return true;
 };
-
-function getBiggestValue(root: TreeNode): number{
-    let current = root;
-    while (current.right) {
-        current = current.right;
-    }
-    return current.val;
-}
-
-function getSmallestValue(root: TreeNode): number{
-    let current = root;
-    while (current.left) {
-        current = current.left;
-    }
-    return current.val;
-}
-
