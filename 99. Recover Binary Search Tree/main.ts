@@ -31,13 +31,14 @@ function recoverTree(root: TreeNode | null): void {
     let firstMissPlaced: TreeNode | null = null;
     let swapped = false;
 
-    let swap = function(t1: TreeNode, t2: TreeNode) {
-        console.log(t1.val, t2.val)
-        let temp = t1?.val;
-        t1.val = t2?.val;
-        t2.val = temp;
-        swapped = true;
-    }
+    // let swap = function(t1: TreeNode, t2: TreeNode) {
+    //     console.log(t1.val, t2.val)
+    //     let temp = t1?.val;
+    //     t1.val = t2?.val;
+    //     t2.val = temp;
+    //     swapped = true;
+    // }
+    let temp: number | null = null;
 
     let inorder = function(current: TreeNode | null) {
         if (current == null) {
@@ -59,12 +60,20 @@ function recoverTree(root: TreeNode | null): void {
         } else {
             if (current.val > firstMissPlaced.val) {
                 if (ptr) {
-                    swap(firstMissPlaced, ptr);
+                    // swap(firstMissPlaced, ptr);
+                    temp = firstMissPlaced.val;
+                    firstMissPlaced.val = ptr.val;
+                    ptr.val = temp;
+                    swapped = true;
                 }
                 return;
             }
             if (ptr && ptr.val > current.val) {
-                swap(firstMissPlaced, current);
+                // swap(firstMissPlaced, current);
+                temp = firstMissPlaced.val;
+                firstMissPlaced.val = current.val;
+                current.val = temp;
+                swapped = true;
                 return;
             }
         }
@@ -74,8 +83,13 @@ function recoverTree(root: TreeNode | null): void {
 
     inorder(root);
     if (!swapped) {
-        if (firstMissPlaced && ptr)
-            swap(firstMissPlaced, ptr);
+        if (firstMissPlaced && ptr) {
+            // swap(firstMissPlaced, ptr);
+            temp = firstMissPlaced.val;
+            firstMissPlaced.val = ptr.val;
+            ptr.val = temp;
+            swapped = true;
+        }
     }
 
 };
