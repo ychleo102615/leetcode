@@ -12,7 +12,7 @@ class TreeNode {
 function buildTree(preorder: number[], inorder: number[]): TreeNode | null {
     let pi = 0;
     let ii = 0;
-    let stack: TreeNode[] = [];
+    let visited: Map<number, boolean> = new Map();
 
     function build(): TreeNode | null {
         if (pi == preorder.length) {
@@ -20,47 +20,26 @@ function buildTree(preorder: number[], inorder: number[]): TreeNode | null {
         }
         // ("build ", preorder[pi]);
         let cur = new TreeNode(preorder[pi]);
-        stack.push(cur);
+        visited.set(cur.val, true);
 
         // ("find left");
         if (preorder[pi] !== inorder[ii]) {
+            // left is not null
             pi++;
-            // ("go left");
             cur.left = build();
-        } else {
-            // ("left is null")
         }
 
-        // this should happen: preorder[pi] === inorder[ii]
-        if (preorder[pi] !== inorder[ii]) {
-            console.error("not expected");
-        }
+        // if (preorder[pi] !== inorder[ii]) {
+        //     console.error("not expected");
+        // }
 
         // ("find right")
         ii++;
-        // check stack include next of inorder[ii]
-        let fallbackIndex = -1;
-        if (stack.length > 0) {
-            // use hash or reverse for loop
-            for (let i = 0; i < stack.length - 1; i++) {
-                if (stack[i].val == inorder[ii]) {
-                    // ("find ", inorder[ii], "at ", i);
-                    fallbackIndex = i;
-                    break;
-                }
-            }
-        }
-        if (fallbackIndex >= 0) {
-            // 右子樹為空
-            stack.splice(fallbackIndex, stack.length - fallbackIndex - 1);
-            // pass parent node, which is cur
-            // ("right is null")
-            return cur;
-        } else {
+        if (!visited.has(inorder[ii])) {
+            // right is not null
             pi++;
+            cur.right = build();
         }
-        // ("go right");
-        cur.right = build();
 
         return cur;
     }
