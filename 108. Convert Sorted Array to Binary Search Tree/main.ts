@@ -11,13 +11,13 @@ class TreeNode {
 
 
 function sortedArrayToBST(nums: number[]): TreeNode | null {
-    function buildTree(start: number, end: number): TreeNode | null {
-        if (start == end) {
+    function buildTree(subnums: number[]): TreeNode | null {
+        if (subnums.length == 0) {
             return null;
         }
-        const mid = start + Math.floor((end - start) / 2);
-        return new TreeNode(nums[mid], buildTree(start, mid), buildTree(mid + 1, end));
+        const mid = Math.floor(subnums.length / 2);
+        return new TreeNode(subnums[mid], buildTree(subnums.slice(0, mid)), buildTree(subnums.slice(mid+1)));
     }
 
-    return buildTree(0, nums.length);
+    return buildTree(nums);
 };
