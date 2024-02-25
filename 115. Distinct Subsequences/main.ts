@@ -1,39 +1,26 @@
 function numDistinct(s: string, t: string): number {
-    // const myMap: Map<number, number>[] = Array.from(new Array(s.length), () => new Map<number, number>());
-    const anoMap = new Map<number, Map<number, number>>();
-    // const array = Array.from(new Array(s.length + 1), () => new Array<number>(t.length + 1));
-    // array[s.length].fill(0);
-    // array[s.length][t.length] = 1;
-    // for (let i = 0; i <= s.length; i++) {
-    //     array[i][t.length] = 1;
-    // }
+    const array = Array.from(new Array(s.length + 1), () => new Array<number>(t.length + 1));
+    array[s.length].fill(0);
+    array[s.length][t.length] = 1;
+    for (let i = 0; i <= s.length; i++) {
+        array[i][t.length] = 1;
+    }
+
+    // let col;
+    // const array = Array.from(Array(s.length + 1).keys(), x => {
+    //     col = new Array<number>(t.length + 1);
+    //     if (x == s.length) {
+    //         col.fill(0);
+    //     }
+    //     col[t.length] = 1;
+    //     return col;
+    // })
 
     function findSubString(sIndex: number, tIndex: number): number {
-        if (tIndex == t.length) {
-            return 1;
+        if (array[sIndex][tIndex] === undefined) {
+            array[sIndex][tIndex] = findSubString(sIndex + 1, tIndex) + (s[sIndex] === t[tIndex] ? findSubString(sIndex + 1, tIndex + 1) : 0);
         }
-        if (sIndex === s.length) {
-            return 0;
-        }
-        // let result = myMap[sIndex].get(tIndex);
-        let thisMap = anoMap.get(sIndex);
-        if (thisMap === undefined) {
-            thisMap = new Map<number, number>();
-            anoMap.set(sIndex, thisMap);
-        }
-        let result = thisMap.get(tIndex);
-
-        if (result !== undefined) {
-            return result;
-        }
-
-        result = findSubString(sIndex + 1, tIndex);
-        if (s[sIndex] === t[tIndex]) {
-            result += findSubString(sIndex + 1, tIndex + 1);
-        }
-        // myMap[sIndex].set(tIndex, result);
-        thisMap.set(tIndex, result);
-        return result;
+        return array[sIndex][tIndex];
     }
     return findSubString(0, 0);
 };
