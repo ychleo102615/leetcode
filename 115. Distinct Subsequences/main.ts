@@ -1,63 +1,39 @@
 function numDistinct(s: string, t: string): number {
-    const myMap: Map<string, number>[] = Array.from(new Array(s.length), () => new Map<string, number>());
-    // const myMap: Map<string, number>[] = new Array(s.length).fill(new Map<string, number>());
-    // const anoMap: Map<string, Map<string, number>> = new Map<string, Map<string, number>>();
+    // const myMap: Map<number, number>[] = Array.from(new Array(s.length), () => new Map<number, number>());
+    const anoMap = new Map<number, Map<number, number>>();
+    // const array = Array.from(new Array(s.length + 1), () => new Array<number>(t.length + 1));
+    // array[s.length].fill(0);
+    // array[s.length][t.length] = 1;
+    // for (let i = 0; i <= s.length; i++) {
+    //     array[i][t.length] = 1;
+    // }
 
-    function findSubString(sIndex: number, subT: string): number {
-        // let pattern = "[" + s.slice(sIndex) + "," + subT +  "]";
-        // console.log("Find " + pattern)
-        // console.log(indent + "Find " + pattern)
-        if (subT.length === 0 ) {
-            // console.log(indent + "t is empty, return 1\n")
+    function findSubString(sIndex: number, tIndex: number): number {
+        if (tIndex == t.length) {
             return 1;
         }
         if (sIndex === s.length) {
-            // console.log(indent + "reached, return 0\n")
             return 0;
         }
-        let result = myMap[sIndex].get(subT);
-        // let thisMap = anoMap.get(s.slice(sIndex));
-        // if (thisMap === undefined) {
-        //     thisMap = new Map<string, number>();
-        //     anoMap.set(s.slice(sIndex), thisMap);
-        // }
-        // let result = anoMap.get(s.slice(sIndex))?.get(subT);
+        // let result = myMap[sIndex].get(tIndex);
+        let thisMap = anoMap.get(sIndex);
+        if (thisMap === undefined) {
+            thisMap = new Map<number, number>();
+            anoMap.set(sIndex, thisMap);
+        }
+        let result = thisMap.get(tIndex);
 
         if (result !== undefined) {
-            // console.log(indent + "This pattern has searched before: " + result + "\n");
-            // console.log("This pattern has searched before: " + result + " " + pattern);
             return result;
         }
 
-
-        result = 0;
-        // let amountWhenTake = 0;
-        if (s[sIndex] === subT[0]) {
-            result += findSubString(sIndex + 1, subT.slice(1))
-            // amountWhenTake = findSubString(sIndex + 1, subT.slice(1))
-            // console.log("take [" + subT[0] + "] from s, get " + amountWhenTake)
-            // console.log(indent + "take [" + subT[0] + "] from s, get " + amount)
-            // result += amountWhenTake;
+        result = findSubString(sIndex + 1, tIndex);
+        if (s[sIndex] === t[tIndex]) {
+            result += findSubString(sIndex + 1, tIndex + 1);
         }
-        result += findSubString(sIndex + 1, subT)
-        // let amountNotTake = findSubString(sIndex + 1, subT)
-        // console.log("without " + subT[0] + " get " + amountNotTake)
-        // console.log(indent + "without " + subT[0] + " get " + amount)
-        // result += amountNotTake;
-
-
-
-        // result = findSubString(sIndex + 1, subT) + findSubString(sIndex + 1, subT.slice(1));
-
-        myMap[sIndex].set(subT, result);
-        // myMap[sIndex].set(subT, amountWhenTake + amountNotTake);
-        // thisMap.set(subT, amountNotTake + amountWhenTake)
-        // myMap[sIndex].set(subT, result);
-        // console.log("result set: " + thisMap.get(subT) + " with " + pattern )
-        // console.log("result set: " + myMap[sIndex].get(subT) + " with " + pattern )
-        // console.log("take: " + amountWhenTake + ", without: " + amountNotTake);
-
+        // myMap[sIndex].set(tIndex, result);
+        thisMap.set(tIndex, result);
         return result;
     }
-    return findSubString(0, t);
+    return findSubString(0, 0);
 };
