@@ -11,13 +11,6 @@ function findLadders(beginWord: string, endWord: string, wordList: string[]): st
     const bfsList: string[] = [beginWord]; // index of begin word
     let bfsLength = 1;
 
-    const wordPathMap: Map<string, string[][]> = new Map();
-    wordPathMap.set(beginWord, [[beginWord]]);
-    for (let i = 0; i < wordList.length; i++) {
-        wordPathMap.set(wordList[i], []);
-    }
-    const endWordPath = wordPathMap.get(endWord)!;
-
     const parentMap: Map<string, string[]> = new Map();
 
     const leftWordMap: Map<string, number> = new Map();
@@ -28,9 +21,6 @@ function findLadders(beginWord: string, endWord: string, wordList: string[]): st
     const ALPHA_COUNT = 26;
     const LADDER_RANGE = beginWord.length * ALPHA_COUNT;
     const codeA = ("a").charCodeAt(0);
-
-    // const candidates = Array.from(Array(wordList.length).keys());
-    // candidates.splice(0, 1);
 
     // let depth = 0;
     while (bfsLength > 0) {
@@ -45,13 +35,6 @@ function findLadders(beginWord: string, endWord: string, wordList: string[]): st
                 if (!leftWordMap.has(searchWord)) {
                     continue;
                 }
-                const curPaths = wordPathMap.get(curWord)!;
-                const targetPaths = wordPathMap.get(searchWord)!;
-                // for (let k = 0; k < curPaths.length; k++) {
-                //     const newPath = curPaths[k].slice();
-                //     newPath.push(searchWord);
-                //     targetPaths.push(newPath);
-                // }
                 if (!bfsList.includes(searchWord)) {
                     bfsList.push(searchWord);
                 }
@@ -68,19 +51,18 @@ function findLadders(beginWord: string, endWord: string, wordList: string[]): st
             leftWordMap.delete(bfsList[i]);
         }
 
-        // if (endWordPath.length > 0 ) {
-        //     break;
-        // }
         if (parentMap.has(endWord)) {
             break;
         }
+    }
+
+    if (!parentMap.has(endWord)) {
+        return [];
     }
     /*
         * [["aaaaa","aaaaz","aaawz","aavwz","avvwz","vvvwz","vvvww","wvvww","wwvww","wwwww","ywwww","yywww","yyyww","yyyyw","yyyyy","xyyyy","xxyyy","xxxyy","xxxxy","xxxxx","gxxxx","ggxxx","gggxx","ggggx","ggggg"]]
         * */
 
-    // return paths;
-    // return endWordPath;
     const paths: string[][] = [];
     const trackParent = function(tracks: string[]) {
         const parents = parentMap.get(tracks[0]);
