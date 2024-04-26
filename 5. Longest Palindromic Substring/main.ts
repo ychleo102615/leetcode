@@ -7,13 +7,13 @@ function longestPalindrome(s: string): string {
     while (index < s.length) {
         let sameCount = 0;
 
-        // 這裡有問題
-        while (s[index] === s[index + sameCount]) {
-            sameCount++;
-            if (index + sameCount >= s.length) {
-                sameCount--;
+        while (true) {
+            if (index + sameCount + 1 >= s.length) {
+                break;
+            } else if (s[index + sameCount + 1] !== s[index]) {
                 break;
             }
+            sameCount++;
         }
 
         simplifiedString += s[index];
@@ -22,8 +22,8 @@ function longestPalindrome(s: string): string {
         index += sameCount + 1;
     }
 
-    console.log(simplifiedString)
-    console.log(simplifiedStringCount)
+    // console.log(simplifiedString)
+    // console.log(simplifiedStringCount)
 
     let longest = "";
     for (let i = 0; i < simplifiedString.length; i++) {
@@ -31,14 +31,16 @@ function longestPalindrome(s: string): string {
         // symmetric count
         let sc = 0;
         let balance = 0;
-        while(simplifiedString[i - sc] === simplifiedString[i + sc]) {
-            sc++;
-            balance = simplifiedStringCount[i + sc] - simplifiedStringCount[i - sc];
-            if (balance !== 0) {
+
+        while (true) {
+            if (i - sc - 1 < 0 || i + sc + 1 >= simplifiedString.length) {
+                break;
+            } else if (simplifiedString[i - sc - 1] !== simplifiedString[i + sc + 1]) {
                 break;
             }
-            if (i - sc < 0 || i + sc >= simplifiedString.length) {
-                sc--;
+            sc++;
+            balance = simplifiedStringCount[i - sc] - simplifiedStringCount[i + sc];
+            if (balance !== 0) {
                 break;
             }
         }
@@ -48,15 +50,15 @@ function longestPalindrome(s: string): string {
         }
         if (balance < 0) {
             // rear is longer
-            combinedStr.slice(0, combinedStr.length + balance);
+            combinedStr = combinedStr.slice(0, combinedStr.length + balance);
         } else if (balance > 0) {
             // front is longer
-            combinedStr.slice(balance, combinedStr.length);
+            combinedStr = combinedStr.slice(balance, combinedStr.length);
         }
 
         if (combinedStr.length > longest.length) {
             longest = combinedStr;
-            console.log("update longest", longest)
+            // console.log("update longest", longest)
         }
     }
 
