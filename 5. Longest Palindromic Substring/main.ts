@@ -1,68 +1,51 @@
+const token = "*";
 function longestPalindrome(s: string): string {
-    let simplifiedString = "";
-    const simplifiedStringCount: number[] = [];
 
+    // morphed string
+    let ms = token;
+
+    for (let i = 0; i < s.length; i++) {
+        ms += s[i] + token;
+    }
+    // console.log("morphed string:", ms)
+
+    const longestCount: number[] = Array(ms.length).fill(0);
 
     let index = 0;
-    while (index < s.length) {
-        let sameCount = 0;
+    let longestIndex = 0;
+    let curentCenter = 0;
+    let currentRightBound = 0;
 
-        while (true) {
-            if (index + sameCount + 1 >= s.length) {
-                break;
-            } else if (s[index + sameCount + 1] !== s[index]) {
+    while (index < ms.length) {
+
+        if (index > currentRightBound) {
+            curentCenter = index;
+            currentRightBound = index;
+        } else {
+            let mirrorIndex = curentCenter - (index - curentCenter);
+            longestCount[index] = Math.min(longestCount[mirrorIndex], currentRightBound - index);
+        }
+        let radius = longestCount[index];
+        while (index - radius - 1 >= 0 && index + radius + 1 < ms.length) {
+            if (ms[index - radius - 1] === ms[index + radius + 1]) {
+                radius++;
+            } else {
                 break;
             }
-            sameCount++;
         }
-
-        simplifiedString += s[index];
-        simplifiedStringCount.push(1 + sameCount);
-
-        index += sameCount + 1;
+        longestCount[index] = radius;
+        if (radius > longestCount[longestIndex]) {
+            longestIndex = index;
+        }
+        if (index + radius > currentRightBound) {
+            curentCenter = index;
+            currentRightBound = index + radius;
+        }
+        // console.log(ms[index], radius);
+        index++;
     }
 
-    // console.log(simplifiedString)
-    // console.log(simplifiedStringCount)
+    const startIndex = (longestIndex - longestCount[longestIndex]) / 2;
 
-    let longest = "";
-    for (let i = 0; i < simplifiedString.length; i++) {
-
-        // symmetric count
-        let sc = 0;
-        let balance = 0;
-
-        while (true) {
-            if (i - sc - 1 < 0 || i + sc + 1 >= simplifiedString.length) {
-                break;
-            } else if (simplifiedString[i - sc - 1] !== simplifiedString[i + sc + 1]) {
-                break;
-            }
-            sc++;
-            balance = simplifiedStringCount[i - sc] - simplifiedStringCount[i + sc];
-            if (balance !== 0) {
-                break;
-            }
-        }
-        let combinedStr = "";
-        for (let j = i - sc; j <= i + sc; j++) {
-            combinedStr += simplifiedString[j].repeat(simplifiedStringCount[j]);
-        }
-        if (balance < 0) {
-            // rear is longer
-            combinedStr = combinedStr.slice(0, combinedStr.length + balance);
-        } else if (balance > 0) {
-            // front is longer
-            combinedStr = combinedStr.slice(balance, combinedStr.length);
-        }
-
-        if (combinedStr.length > longest.length) {
-            longest = combinedStr;
-            // console.log("update longest", longest)
-        }
-    }
-
-
-
-    return longest;
+    return s.slice(startIndex, startIndex + longestCount[longestIndex]);
 };
