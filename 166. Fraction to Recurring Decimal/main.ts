@@ -33,18 +33,18 @@ function fractionToDecimal(numerator: number, denominator: number): string {
         result += quotient.toString();
         if (history.has(remainder)) {
             let start = history.get(remainder)!;
-            if (result[start] == result.slice(-1)) {
-                // console.log("repeat")
-                result = result.slice(0, -1);
-            } else {
-                // console.log("different", result[start], result[result.length-1])
-                start++;
-            }
+            // if (result[start] == result.slice(-1)) {
+            //     // console.log("repeat")
+            //     result = result.slice(0, -1);
+            // } else {
+            //     // console.log("different", result[start], result[result.length-1])
+            //     start++;
+            // }
             return result.slice(0, start) + "(" + result.slice(start, result.length) + ")";
         }
         if (remainder == 0) {
             return result;
         }
-        history.set(remainder, result.length - 1);
+        history.set(remainder, result.length/*  - 1 */);
     } while(true);
 };
