@@ -19,43 +19,60 @@ function characterReplacement(s: string, k: number): number {
         });
     }
     alphabetTrack.get(cur)!.push(0);
-    console.log(alphabetTrack);
+    // console.log(alphabetTrack);
 
     let maxLen = 0;
 
     alphabetTrack.forEach((track, alphabet) => {
-        console.log("alphabet", alphabet)
-        for (let start = 1; start < track.length; start += 2) {
-            // let len = 0;
-            let len = track[start];
-            let coda = k;
-            let end = start;
+        // console.log("alphabet", alphabet)
 
-            while (coda > 0 && end < track.length) {
-                // len += track[end];
-                if (coda >= track[end+1]) {
-                    coda -= track[end+1];
-                    // len += track[end+1];
-                    len += track[end+1] + (track[end+2] | 0);
-                    end += 2;
-                } else {
-                    len += coda;
-                    coda = 0;
-                    break;
-                }
-                console.log("len, end", len, end)
-            }
-            if (coda > 0) {
-                len += Math.min(track[start-1], coda);
-                // len += Math.min(track[start-1] + track[track.length-1], coda);
-            }
-            if (len > maxLen) {
-                maxLen = len;
-            }
-            if (end > track.length) {
-                break;
+        let start = 1;
+        let end = 1;
+        let coda = k;
+        let len = track[start];
+
+        function checkLen() {
+            const possibleAddOn = Math.min(track[start-1], coda);
+            if (len + possibleAddOn > maxLen) {
+                maxLen = len + possibleAddOn;
             }
         }
+
+        while (end < track.length) {
+            checkLen();
+
+            if (coda >= track[end+1]) {
+                coda -= track[end+1];
+                len += track[end+1] + (track[end+2] | 0);
+                end += 2;
+            } else if (start + 2 > end) {
+                start += 2;
+                end += 2;
+                if (end >= track.length) {
+                    break;
+                }
+                len = track[start];
+            } else {
+
+                // if (coda > 0) {
+                //     len += Math.min(track[start-1], coda);
+                // }
+                // if (len > maxLen) {
+                //     maxLen = len;
+                // }
+                // if (coda > 0) {
+                //     len -= Math.min(track[start-1], coda);
+                // }
+
+                coda += track[start+1];
+                len -= track[start] + track[start+1];
+                start += 2;
+            }
+        }
+
+        checkLen();
+
+
     });
 
     return maxLen;
