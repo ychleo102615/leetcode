@@ -14,38 +14,43 @@ function findClosestElements(arr: number[], k: number, x: number): number[] {
         }
         return left;
     }
+    function upBound(value: number): number {
+        let left = 0;
+        let right = arr.length;
+        while (left < right) {
+            let mid = Math.floor((left + right) / 2);
+            if (arr[mid] > value) {
+                // aim here
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
 
-    let left = lowBound(x + 1) - 1;
-    let right = left + 1;
-    let ans: number[] = [];
-    console.log("left, right:", left, right);
 
-    while (ans.length < k) {
-        if (left < 0) {
-            console.log("use right")
+    let left = lowBound(x);
+    let right = upBound(x);
+
+    while (right - left < k) {
+        if (left - 1 < 0) {
             // use right
-            ans.push(...arr.slice(right, right + k - ans.length));
+            // console.log("use right")
+            right = left + k;
             break;
         } else if (right >= arr.length) {
-            console.log("use left")
             // use left
-            ans.splice(0, 0, ...arr.slice(left + 1 - (k - ans.length), left + 1));
+            // console.log("use left")
+            left = right - k;
             break;
         }
-
-
-        if (x - arr[left] <= arr[right] - x) {
-            // ans.push(arr[left]);
-            ans.splice(0, 0, arr[left]);
+        if (x - arr[left - 1] <= arr[right] - x) {
             left--;
         } else {
-            ans.push(arr[right]);
             right++;
         }
     }
 
-    console.log("ans", ans);
-
-
-    return ans;
+    return arr.slice(left, left + k)
 };
